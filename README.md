@@ -14,6 +14,51 @@ Run command in console
 
 Add into your model's table migration userstamp fields. It's type must be same as type of user id. You can use default **created_by**, **updated_by**, **deleted_by** field names or any other.
 
+You can use `Laragrad\Support\Userstamps` `methods addUserstampColumns()` to add or `dropUserstampColumns()` drop columns in your migration file. 
+
+For example, to add userstamps columns:
+
+```
+<?php
+
+use ...;
+use Laragrad\Support\Userstamps as UserstampsSupport; // Add use
+
+class CreateExampleTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('examples', function (Blueprint $table) {
+            
+            $table->id('id');
+            ...
+            UserstampsSupport::addUserstampsColumns($table); // Creating columns
+
+        });
+    }
+
+    ...
+}
+```
+
+If you use soft deleting in your table then put true into 2nd argument. 
+To change type of your userstamps columns you can put 'uuid' or 'integer' or 'bigInteger' into 3rd argument.
+By default created columns has default names. If your userstamp columns have not default names then put column name array into 4th argument. 
+
+For example:
+
+	UserstampsSupport::addUserstampsColumns($table, true, 'uuid', ['create_user_id','update_user_id','deleted_user_id']);
+
+To drop columns you can use `UserstampsSupport::dropUserstampsColumns()`. For example
+
+	UserstampsSupport::dropUserstampsColumns($table, true, ['create_user_id','update_user_id','deleted_user_id']);
+
+
 ### Preparing model
 
 Add next changes into your table model class:
